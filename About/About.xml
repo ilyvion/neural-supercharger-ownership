@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+    <packageId>ilyvion.neuralsuperchargerownership</packageId>
+    <name>Neural Supercharger Ownership</name>
+    <author>ilyvion</author>
+    <description>This is a simple mod that does a single thing — allows you to assign ownership to Neural Superchargers just like you would a bed.</description>
+    <supportedVersions>
+        <li>1.5</li>
+    </supportedVersions>
+    <modVersion>0.1.0</modVersion>
+    <modDependencies>
+        <li>
+            <packageId>brrainz.harmony</packageId>
+            <displayName>Harmony</displayName>
+            <downloadUrl>https://steamcommunity.com/workshop/filedetails/?id=2009463077</downloadUrl>
+            <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+        </li>
+        <li>
+            <packageId>ludeon.rimworld.ideology</packageId>
+            <displayName>Ideology</displayName>
+        </li>
+    </modDependencies>
+    <loadAfter>
+        <li>brrainz.harmony</li>
+        <li>ludeon.rimworld.ideology</li>
+    </loadAfter>
+</ModMetaData>

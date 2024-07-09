@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/ThingDef[defName="NeuralSupercharger"]/comps</xpath>
+        <value>
+            <li Class="CompProperties_AssignableToPawn">
+                <maxAssignedPawnsCount>1</maxAssignedPawnsCount>
+                <drawAssignmentOverlay>true</drawAssignmentOverlay>
+                <drawUnownedAssignmentOverlay>false</drawUnownedAssignmentOverlay>
+                <compClass>NeuralSuperchargerOwnership.Comps.CompAssignableToPawn_NeuralSupercharger</compClass>
+            </li>
+        </value>
+    </Operation>
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/ThingDef[defName="NeuralSupercharger"]</xpath>
+        <value>
+            <drawGUIOverlay>true</drawGUIOverlay>
+        </value>
+    </Operation>
+</Patch>

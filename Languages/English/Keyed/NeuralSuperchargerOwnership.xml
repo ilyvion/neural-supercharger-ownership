@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LanguageData>
+    <NeuralSuperchargerOwnership.CommandBedSetOwnerDesc>Assign this neural supercharger to be owned by a specific {0}.</NeuralSuperchargerOwnership.CommandBedSetOwnerDesc>
+    <NeuralSuperchargerOwnership.OwnedBySomeoneElse>owned by someone else</NeuralSuperchargerOwnership.OwnedBySomeoneElse>
+</LanguageData>
