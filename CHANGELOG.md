@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Overhauled the ownership mechanism to work more like the bed in vanilla.
+-   When the supercharger is being charged, move the ownership label aside slightly so they don't overlap.
+
+### Fixed
+
+-   Properly handle pawn death and neural superchargers being deconstructed/destroyed.
+
 ## [0.1.0] - 2024-07-09
 
 ### Added

@@ -1,21 +1,29 @@
 namespace NeuralSuperchargerOwnership.Comps;
 
+[HotSwappable]
 public class CompAssignableToPawn_NeuralSupercharger : CompAssignableToPawn
 {
-    public static Dictionary<Pawn, Building> AssignedNeuralSuperchargers { get; private set; } = [];
-    public static new Dictionary<Building, Pawn> AssignedPawns { get; private set; } = [];
+    internal bool IsOwner(Pawn pawn)
+    {
+        return AssignedPawnsForReading.IndexOf(pawn) >= 0;
+    }
 
     public override void PostExposeData()
     {
         base.PostExposeData();
+
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
         {
             Building building = (Building)parent;
 
             if (assignedPawns.Count == 1)
             {
-                AssignedNeuralSuperchargers[assignedPawns[0]] = building;
-                AssignedPawns[building] = assignedPawns[0];
+                var assignedPawn = assignedPawns[0];
+                if (assignedPawn.NeuralSuperchargerOwnership().ownedNeuralSupercharger != building)
+                {
+                    NeuralSuperchargerOwnershipMod.Warning($"Neural supercharger {building} was assigned to pawn {assignedPawn}, but pawn didn't own it. This should only be the case when upgrading from version 0.1.0 to 0.2.0! Assigning ownership to pawn now.");
+                    assignedPawn.NeuralSuperchargerOwnership().ownedNeuralSupercharger = building;
+                }
             }
         }
     }
@@ -27,54 +35,20 @@ public class CompAssignableToPawn_NeuralSupercharger : CompAssignableToPawn
 
     public override bool AssignedAnything(Pawn pawn)
     {
-        return AssignedNeuralSuperchargers.ContainsKey(pawn);
-    }
-
-    public override void ForceAddPawn(Pawn pawn)
-    {
-        TryAssignPawn(pawn);
+        return (pawn ?? throw new ArgumentNullException(nameof(pawn))).NeuralSuperchargerOwnership().ownedNeuralSupercharger != null;
     }
 
     public override void TryAssignPawn(Pawn pawn)
     {
         Building building = (Building)parent;
 
-        // Remove the current owner of this building
-        if (AssignedPawns.TryGetValue(building, out var currentOwner))
-        {
-            AssignedNeuralSuperchargers.Remove(currentOwner);
-        }
-        if (!assignedPawns.Empty())
-        {
-            assignedPawns.Clear();
-        }
-
-        // Remove the pawn from other buildings they may already own
-        if (AssignedNeuralSuperchargers.TryGetValue(pawn, out var currentBuilding))
-        {
-            currentBuilding.GetComp<CompAssignableToPawn_NeuralSupercharger>().assignedPawns.Clear();
-        }
-
-        AssignedNeuralSuperchargers[pawn] = building;
-        AssignedPawns[building] = pawn;
-        assignedPawns.Add(pawn);
-
+        (pawn ?? throw new ArgumentNullException(nameof(pawn))).NeuralSuperchargerOwnership().ClaimNeuralSupercharger(building);
         uninstalledAssignedPawns.Remove(pawn);
-    }
-
-    public override void ForceRemovePawn(Pawn pawn)
-    {
-        TryUnassignPawn(pawn);
     }
 
     public override void TryUnassignPawn(Pawn pawn, bool sort = true, bool uninstall = false)
     {
-        if (AssignedNeuralSuperchargers.TryGetValue(pawn, out var currentBuilding))
-        {
-            AssignedPawns.Remove(currentBuilding);
-        }
-        AssignedNeuralSuperchargers.Remove(pawn);
-        assignedPawns.Remove(pawn);
+        (pawn ?? throw new ArgumentNullException(nameof(pawn))).NeuralSuperchargerOwnership().UnclaimNeuralSupercharger();
         if (uninstall && !uninstalledAssignedPawns.Contains(pawn))
         {
             uninstalledAssignedPawns.Add(pawn);
@@ -83,26 +57,34 @@ public class CompAssignableToPawn_NeuralSupercharger : CompAssignableToPawn
 
     protected override bool CanSetUninstallAssignedPawn(Pawn pawn)
     {
-        return true;
+        if (pawn != null && !AssignedAnything(pawn) && (bool)CanAssignTo(pawn))
+        {
+            if (!pawn.IsPrisonerOfColony)
+            {
+                return pawn.IsColonist;
+            }
+            return true;
+        }
+        return false;
     }
 
     public override string CompInspectStringExtra()
     {
         if (!PlayerCanSeeAssignments)
         {
-            return "";
+            return string.Empty;
         }
 
-        Building building = (Building)parent;
-        if (AssignedPawns.TryGetValue(building, out var currentOwner))
+        if (assignedPawns.Count == 1)
         {
-            if (CanDrawOverlayForPawn(currentOwner))
+            var assignedPawn = assignedPawns[0];
+            if (CanDrawOverlayForPawn(assignedPawn))
             {
-                return "Owner".Translate() + ": " + currentOwner.Label;
+                return "Owner".Translate() + ": " + assignedPawn.Label;
             }
             else
             {
-                return "";
+                return string.Empty;
             }
         }
         else
@@ -113,27 +95,77 @@ public class CompAssignableToPawn_NeuralSupercharger : CompAssignableToPawn
 
     public override void PostDeSpawn(Map map)
     {
-        base.PostDeSpawn(map);
-        RemoveEntries();
+        // Intentionally not calling this; handling removal of assignment in PostDestroy
+        // base.PostDeSpawn(map);
     }
 
     public override void PostDestroy(DestroyMode mode, Map previousMap)
     {
         base.PostDestroy(mode, previousMap);
-        RemoveEntries();
+
+        bool destroyed = mode == DestroyMode.KillFinalize;
+
+        if (mode != 0)
+        {
+            if (assignedPawns.Count == 1)
+            {
+                var assignedPawn = assignedPawns[0];
+                assignedPawn.NeuralSuperchargerOwnership().UnclaimNeuralSupercharger();
+
+                string key = "MessageBedLostAssignment";
+                if (destroyed)
+                {
+                    key = "MessageBedDestroyed";
+                }
+                Messages.Message(key.Translate(parent.def, assignedPawn), new LookTargets(parent, assignedPawn), MessageTypeDefOf.CautionInput, historical: false);
+            }
+        }
+        else if (InstallBlueprintUtility.ExistingBlueprintFor(parent) == null)
+        {
+            if (assignedPawns.Count == 1)
+            {
+                var assignedPawn = assignedPawns[0];
+                Messages.Message("MessageBedLostAssignment".Translate(parent.def, assignedPawn), new LookTargets(parent, assignedPawn), MessageTypeDefOf.CautionInput, historical: false);
+            }
+        }
     }
 
-    private void RemoveEntries()
+    public override void DrawGUIOverlay()
     {
-        Building building = (Building)parent;
-        AssignedPawns.Remove(building);
-        var pawn = AssignedNeuralSuperchargers
-            .Where(kv => kv.Value == building)
-            .Select(kv => kv.Key)
-            .SingleOrDefault();
-        if (pawn != null)
+        if (Find.CameraDriver.CurrentZoom != 0 || !PlayerCanSeeAssignments)
         {
-            AssignedNeuralSuperchargers.Remove(pawn);
+            return;
+        }
+
+        if (assignedPawns.Count == 1)
+        {
+            Building building = (Building)parent;
+            bool charged = building.GetComp<CompNeuralSupercharger>().Charged;
+            Pawn pawn = assignedPawns[0];
+            if (CanDrawOverlayForPawn(pawn) && (!pawn.RaceProps.Animal || Prefs.AnimalNameMode.ShouldDisplayAnimalName(pawn)))
+            {
+                if (charged && parent.Rotation.IsHorizontal)
+                {
+                    GenMapUI.DrawThingLabel(parent, pawn.LabelShort, GenMapUI.DefaultThingLabelColor);
+                }
+                else
+                {
+                    Vector2 screenPos = GenMapUI.LabelDrawPosFor(parent, -0.4f);
+                    if (parent.Rotation.IsHorizontal)
+                    {
+                        screenPos.y -= 15f;
+                    }
+                    else
+                    {
+                        screenPos.y += 30f;
+                    }
+                    GenMapUI.DrawThingLabel(screenPos, pawn.LabelShort, GenMapUI.DefaultThingLabelColor);
+                }
+            }
+        }
+        else
+        {
+            base.DrawGUIOverlay();
         }
     }
 }
