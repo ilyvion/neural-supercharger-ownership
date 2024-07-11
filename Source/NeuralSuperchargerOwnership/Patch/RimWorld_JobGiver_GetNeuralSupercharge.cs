@@ -3,7 +3,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NeuralSuperchargerOwnership.Comps;
 
-namespace NeuralSuperchargerOwnership.Patches;
+namespace NeuralSuperchargerOwnership.Patch;
 
 // Based on code from
 // <https://github.com/PeteTimesSix/TranspilerExamples/blob/main/Source/HarmonyPatchExamples/CompilerGeneratedClasses.cs>

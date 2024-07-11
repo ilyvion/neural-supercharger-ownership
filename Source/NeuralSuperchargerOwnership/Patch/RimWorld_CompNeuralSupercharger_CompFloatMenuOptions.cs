@@ -2,7 +2,7 @@ using HarmonyLib;
 using NeuralSuperchargerOwnership.Comps;
 using Verse.AI;
 
-namespace NeuralSuperchargerOwnership.Patches;
+namespace NeuralSuperchargerOwnership.Patch;
 
 [HarmonyPatch(typeof(CompNeuralSupercharger), nameof(CompNeuralSupercharger.CompFloatMenuOptions))]
 internal static class RimWorld_CompNeuralSupercharger_CompFloatMenuOptions

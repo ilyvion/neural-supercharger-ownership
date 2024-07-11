@@ -5,7 +5,7 @@ public class CompAssignableToPawn_NeuralSupercharger : CompAssignableToPawn
 {
     internal bool IsOwner(Pawn pawn)
     {
-        return AssignedPawnsForReading.IndexOf(pawn) >= 0;
+        return assignedPawns.IndexOf(pawn) >= 0;
     }
 
     public override void PostExposeData()
