@@ -14,12 +14,8 @@
 
         <RootNamespace>NeuralSuperchargerOwnership</RootNamespace>
         <AssemblyName>NeuralSuperchargerOwnership</AssemblyName>
-        <VersionPrefix>0.2.0</VersionPrefix>
 
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-
-        <!-- Intellisense doesn't work without specifying this explicitly -->
-        <RimWorldVersion Condition="'$(RimWorldVersion)'==''">1.6</RimWorldVersion>
     </PropertyGroup>
 
     <PropertyGroup>
