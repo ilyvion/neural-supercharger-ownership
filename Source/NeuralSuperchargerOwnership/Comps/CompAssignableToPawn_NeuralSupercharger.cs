@@ -93,7 +93,11 @@ public class CompAssignableToPawn_NeuralSupercharger : CompAssignableToPawn
         }
     }
 
+#if v1_5
     public override void PostDeSpawn(Map map)
+#else
+    public override void PostDeSpawn(Map map, DestroyMode mode)
+#endif
     {
         // Intentionally not calling this; handling removal of assignment in PostDestroy
         // base.PostDeSpawn(map);
@@ -105,7 +109,7 @@ public class CompAssignableToPawn_NeuralSupercharger : CompAssignableToPawn
 
         bool destroyed = mode == DestroyMode.KillFinalize;
 
-        if (mode != 0)
+        if (mode != DestroyMode.Vanish)
         {
             if (assignedPawns.Count == 1)
             {

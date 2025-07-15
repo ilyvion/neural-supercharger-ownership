@@ -20,7 +20,14 @@ jobs:
               with:
                   dotnet-version: 8.0.x
 
-            - name: Build Mod
+            - name: Build Mod for 1.6
+              env:
+                RimWorldVersion: 1.6
+              run: dotnet build --configuration Release NeuralSuperchargerOwnership.sln
+
+            - name: Build Mod for 1.5
+              env:
+                RimWorldVersion: 1.5
               run: dotnet build --configuration Release NeuralSuperchargerOwnership.sln
 
             - name: Upload Mod Artifacts
@@ -29,14 +36,15 @@ jobs:
                   name: NeuralSuperchargerOwnership-${{ inputs.artifact-suffix }}
                   path: |
                       About/
+                      1.6/
                       1.5/
-                      Languages/
-                      Patches/
+                      Common/
                       LICENSE
                       LICENSE.Apache-2.0
                       LICENSE.MIT
                       README.md
                       CHANGELOG.md
+                      LoadFolders.xml
                       !**/.*
                       !About/*.pdn
                       !About/*.svg
