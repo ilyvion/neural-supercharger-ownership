@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - A neural supercharger that is removed outright (for example with the dev mode destroy tool, or by another mod) no longer leaves its owner assigned to a supercharger that no longer exists.
+- Loading a save in which a pawn is listed as the owner of two neural superchargers now leaves them owning only one, instead of both still listing them.
 
 ## [0.3.0] - 2025-07-15
 

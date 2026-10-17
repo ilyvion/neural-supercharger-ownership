@@ -17,19 +17,27 @@ internal sealed class CompAssignableToPawn_NeuralSupercharger : CompAssignableTo
 
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
         {
-            var building = (Building)parent;
+            ReconcileOwnerAfterLoad();
+        }
+    }
 
-            if (assignedPawns.Count == 1)
-            {
-                var assignedPawn = assignedPawns[0];
-                if (assignedPawn.NeuralSuperchargerOwnership().ownedNeuralSupercharger != building)
-                {
-                    NeuralSuperchargerOwnershipMod.Warning(
-                        $"Neural supercharger {building} was assigned to pawn {assignedPawn}, but pawn didn't own it. This should only be the case when upgrading from version 0.1.0 to 0.2.0! Assigning ownership to pawn now."
-                    );
-                    assignedPawn.NeuralSuperchargerOwnership().ownedNeuralSupercharger = building;
-                }
-            }
+    internal void ReconcileOwnerAfterLoad()
+    {
+        if (assignedPawns.Count != 1)
+        {
+            return;
+        }
+
+        var building = (Building)parent;
+        var assignedPawn = assignedPawns[0];
+        var ownership = assignedPawn.NeuralSuperchargerOwnership();
+        if (ownership.ownedNeuralSupercharger != building)
+        {
+            NeuralSuperchargerOwnershipMod.Warning(
+                $"Neural supercharger {building} was assigned to pawn {assignedPawn}, but pawn didn't own it. This should only be the case when upgrading from version 0.1.0 to 0.2.0! Assigning ownership to pawn now."
+            );
+            ownership.ownedNeuralSupercharger?.AssignedOwnership().ForceRemovePawn(assignedPawn);
+            ownership.ownedNeuralSupercharger = building;
         }
     }
 

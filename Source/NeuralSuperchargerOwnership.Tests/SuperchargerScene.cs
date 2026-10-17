@@ -56,10 +56,12 @@ internal sealed class SuperchargerScene : IDisposable
         return building;
     }
 
-    internal Pawn MakeColonist() => MakePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+    // Without a cell, the colonist is spawned somewhere near the map's center.
+    internal Pawn MakeColonist(IntVec3? cell = null) =>
+        MakePawn(PawnKindDefOf.Colonist, Faction.OfPlayer, cell);
 
     // The test world has no other humanlike factions, so strangers belong to no faction.
-    internal Pawn MakeStranger() => MakePawn(PawnKindDefOf.Villager, null);
+    internal Pawn MakeStranger() => MakePawn(PawnKindDefOf.Villager, null, null);
 
     internal Pawn MakePrisoner()
     {
@@ -68,15 +70,18 @@ internal sealed class SuperchargerScene : IDisposable
         return pawn;
     }
 
-    private Pawn MakePawn(PawnKindDef kind, Faction? faction)
+    private Pawn MakePawn(PawnKindDef kind, Faction? faction, IntVec3? cell)
     {
         var pawn = PawnGenerator.GeneratePawn(kind, faction);
         Expect.IsNotNull(
             pawn.NeuralSuperchargerOwnership(),
             "The pawn has no CompNeuralSuperchargerOwnership"
         );
-        var cell = CellFinder.RandomClosewalkCellNear(new IntVec3(20, 0, 20), Map, 8);
-        _ = GenSpawn.Spawn(pawn, cell, Map);
+        _ = GenSpawn.Spawn(
+            pawn,
+            cell ?? CellFinder.RandomClosewalkCellNear(new IntVec3(20, 0, 20), Map, 8),
+            Map
+        );
         pawns.Add(pawn);
         return pawn;
     }
