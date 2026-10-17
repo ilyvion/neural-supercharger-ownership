@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralSuperchargerOwnership", "Source\NeuralSuperchargerOwnership\NeuralSuperchargerOwnership.csproj", "{385C3595-E18A-41FF-AFDD-7976A8E69C03}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralSuperchargerOwnership.Tests", "Source\NeuralSuperchargerOwnership.Tests\NeuralSuperchargerOwnership.Tests.csproj", "{8B644A13-9551-4FE5-BA38-6653E8E025D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,9 @@ Global
 		{385C3595-E18A-41FF-AFDD-7976A8E69C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{385C3595-E18A-41FF-AFDD-7976A8E69C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{385C3595-E18A-41FF-AFDD-7976A8E69C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B644A13-9551-4FE5-BA38-6653E8E025D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B644A13-9551-4FE5-BA38-6653E8E025D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B644A13-9551-4FE5-BA38-6653E8E025D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

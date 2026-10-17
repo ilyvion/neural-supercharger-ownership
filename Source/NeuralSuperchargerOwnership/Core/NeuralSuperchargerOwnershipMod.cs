@@ -1,3 +1,5 @@
+[assembly: InternalsVisibleTo("NeuralSuperchargerOwnership.Tests")]
+
 namespace NeuralSuperchargerOwnership;
 
 #pragma warning disable CA1812
