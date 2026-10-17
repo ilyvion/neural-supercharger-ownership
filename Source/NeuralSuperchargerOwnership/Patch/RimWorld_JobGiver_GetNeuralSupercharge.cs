@@ -30,7 +30,7 @@ internal static class RimWorld_JobGiver_GetNeuralSupercharge
     }
 
     [HarmonyTargetMethods]
-    private static IEnumerable<MethodBase> CalculateMethods() =>
+    internal static IEnumerable<MethodBase> CalculateMethods() =>
         typeof(JobGiver_GetNeuralSupercharge)
             .GetNestedTypes(AccessTools.all)
             .SelectMany(AccessTools.GetDeclaredMethods)
