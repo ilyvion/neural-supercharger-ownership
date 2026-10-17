@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-17
+
 ### Fixed
 
 - Pawns of modded humanlike races (such as Humanoid Alien Races races) can now own a neural supercharger, and having one in the colony no longer breaks the assign owner window.
@@ -45,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First implementation of the mod.
 
-[Unreleased]: https://github.com/ilyvion/neural-supercharger-ownership/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/ilyvion/neural-supercharger-ownership/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/ilyvion/neural-supercharger-ownership/compare/v0.4.0..v0.4.1
 [0.4.0]: https://github.com/ilyvion/neural-supercharger-ownership/compare/v0.3.0..v0.4.0
 [0.3.0]: https://github.com/ilyvion/neural-supercharger-ownership/releases/tag/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ilyvion/neural-supercharger-ownership/releases/tag/v0.1.0...v0.2.0
