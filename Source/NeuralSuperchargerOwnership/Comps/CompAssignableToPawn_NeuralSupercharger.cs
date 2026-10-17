@@ -55,9 +55,12 @@ internal sealed class CompAssignableToPawn_NeuralSupercharger : CompAssignableTo
 
     public override void TryUnassignPawn(Pawn pawn, bool sort = true, bool uninstall = false)
     {
-        _ = (pawn ?? throw new ArgumentNullException(nameof(pawn)))
-            .NeuralSuperchargerOwnership()
-            .UnclaimNeuralSupercharger();
+        if (!IsOwner(pawn ?? throw new ArgumentNullException(nameof(pawn))))
+        {
+            return;
+        }
+
+        _ = pawn.NeuralSuperchargerOwnership().UnclaimNeuralSupercharger();
         if (uninstall && !uninstalledAssignedPawns.Contains(pawn))
         {
             uninstalledAssignedPawns.Add(pawn);

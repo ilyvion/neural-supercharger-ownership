@@ -8,7 +8,7 @@ namespace NeuralSuperchargerOwnership.Tests;
 internal sealed class SuperchargerScene : IDisposable
 {
     private readonly List<Building> superchargers = [];
-    private readonly List<Pawn> colonists = [];
+    private readonly List<Pawn> pawns = [];
 
     internal Map Map { get; }
 
@@ -56,16 +56,28 @@ internal sealed class SuperchargerScene : IDisposable
         return building;
     }
 
-    internal Pawn MakeColonist()
+    internal Pawn MakeColonist() => MakePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+
+    // The test world has no other humanlike factions, so strangers belong to no faction.
+    internal Pawn MakeStranger() => MakePawn(PawnKindDefOf.Villager, null);
+
+    internal Pawn MakePrisoner()
     {
-        var pawn = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+        var pawn = MakeStranger();
+        pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
+        return pawn;
+    }
+
+    private Pawn MakePawn(PawnKindDef kind, Faction? faction)
+    {
+        var pawn = PawnGenerator.GeneratePawn(kind, faction);
         Expect.IsNotNull(
             pawn.NeuralSuperchargerOwnership(),
-            "The colonist has no CompNeuralSuperchargerOwnership"
+            "The pawn has no CompNeuralSuperchargerOwnership"
         );
         var cell = CellFinder.RandomClosewalkCellNear(new IntVec3(20, 0, 20), Map, 8);
         _ = GenSpawn.Spawn(pawn, cell, Map);
-        colonists.Add(pawn);
+        pawns.Add(pawn);
         return pawn;
     }
 
@@ -98,10 +110,10 @@ internal sealed class SuperchargerScene : IDisposable
             message
         );
 
-    // Colonists go first, so they give up their superchargers before those are destroyed.
+    // Pawns go first, so they give up their superchargers before those are destroyed.
     public void Dispose()
     {
-        foreach (var pawn in colonists)
+        foreach (var pawn in pawns)
         {
             if (!pawn.Destroyed)
             {
