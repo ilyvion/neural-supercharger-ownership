@@ -5,6 +5,12 @@ internal sealed class CompAssignableToPawn_NeuralSupercharger : CompAssignableTo
 {
     internal bool IsOwner(Pawn pawn) => assignedPawns.IndexOf(pawn) >= 0;
 
+    internal bool MayBeUsedBy(Pawn pawn) => MayUse(assignedPawns, pawn);
+
+    // A supercharger without an owner may be used by anyone.
+    internal static bool MayUse<T>(IReadOnlyList<T> owners, T pawn) =>
+        owners.Count == 0 || owners.Contains(pawn);
+
     public override void PostExposeData()
     {
         base.PostExposeData();

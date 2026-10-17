@@ -13,10 +13,11 @@ internal static class RimWorld_CompNeuralSupercharger_CompFloatMenuOptions
         CompProperties ___props
     )
     {
-        var compAssignableToPawn =
-            __instance.parent.TryGetComp<CompAssignableToPawn_NeuralSupercharger>();
-        var assignedPawnsForReading = compAssignableToPawn.AssignedPawnsForReading;
-        if (assignedPawnsForReading.Empty() || assignedPawnsForReading.Contains(selPawn))
+        if (
+            __instance
+                .parent.TryGetComp<CompAssignableToPawn_NeuralSupercharger>()
+                .MayBeUsedBy(selPawn)
+        )
         {
             return true;
         }
@@ -47,12 +48,9 @@ internal static class Rimworld_JobDriver_GetNeuralSupercharge_MakeNewToils
         Pawn ___pawn
     ) =>
         _ = __instance.FailOn(() =>
-        {
-            var charger = ___job.GetTarget(TargetIndex.A).Thing;
-
-            var compAssignableToPawn =
-                charger.TryGetComp<CompAssignableToPawn_NeuralSupercharger>();
-            var assignedPawnsForReading = compAssignableToPawn.AssignedPawnsForReading;
-            return !assignedPawnsForReading.Empty() && !assignedPawnsForReading.Contains(___pawn);
-        });
+            !___job
+                .GetTarget(TargetIndex.A)
+                .Thing.TryGetComp<CompAssignableToPawn_NeuralSupercharger>()
+                .MayBeUsedBy(___pawn)
+        );
 }

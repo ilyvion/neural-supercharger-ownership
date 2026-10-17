@@ -16,6 +16,17 @@
         build_mod.yml) skips building it, and DevTools, entirely; neither DLL lands in a shipped
         release.
     -->
+    <!--
+        Without the test sources and the DevTools reference (see below), Krafs.Publicizer's
+        generated IgnoresAccessChecksToAttribute merely shadows the one inside the referenced
+        NeuralSuperchargerOwnership assembly; CS0436 is harmless here.
+    -->
+    <PropertyGroup Condition="'$(RimWorldVersion)' != '1.6' And '$(RimWorldVersion)' != '1.7'">
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <Publicize Include="Assembly-CSharp:RimWorld.CompRechargeable.ticksUntilCharged" />
+    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\NeuralSuperchargerOwnership\NeuralSuperchargerOwnership.csproj">
             <CopyLocal>False</CopyLocal>

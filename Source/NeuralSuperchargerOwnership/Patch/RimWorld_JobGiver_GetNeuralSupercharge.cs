@@ -48,9 +48,7 @@ internal static class RimWorld_JobGiver_GetNeuralSupercharge
     {
         if (__result)
         {
-            var compAssignableToPawn = x.TryGetComp<CompAssignableToPawn_NeuralSupercharger>();
-            var assignedPawnsForReading = compAssignableToPawn.AssignedPawnsForReading;
-            __result = assignedPawnsForReading.Empty() || assignedPawnsForReading.Contains(___pawn);
+            __result = x.TryGetComp<CompAssignableToPawn_NeuralSupercharger>().MayBeUsedBy(___pawn);
         }
     }
 }
