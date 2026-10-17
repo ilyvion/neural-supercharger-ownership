@@ -1,6 +1,6 @@
 namespace NeuralSuperchargerOwnership.Comps;
 
-public class CompNeuralSuperchargerOwnership : ThingComp
+internal sealed class CompNeuralSuperchargerOwnership : ThingComp
 {
     internal Building? ownedNeuralSupercharger;
 
@@ -18,10 +18,13 @@ public class CompNeuralSuperchargerOwnership : ThingComp
         {
             return false;
         }
-        UnclaimNeuralSupercharger();
+        _ = UnclaimNeuralSupercharger();
         if (!compAssignable.AssignedPawnsForReading.Empty())
         {
-            compAssignable.AssignedPawnsForReading[0].NeuralSuperchargerOwnership().UnclaimNeuralSupercharger();
+            _ = compAssignable
+                .AssignedPawnsForReading[0]
+                .NeuralSuperchargerOwnership()
+                .UnclaimNeuralSupercharger();
         }
         compAssignable.ForceAddPawn((Pawn)parent);
         ownedNeuralSupercharger = newNeuralSupercharger;
@@ -42,6 +45,6 @@ public class CompNeuralSuperchargerOwnership : ThingComp
     public override void PostDestroy(DestroyMode mode, Map previousMap)
     {
         base.PostDestroy(mode, previousMap);
-        UnclaimNeuralSupercharger();
+        _ = UnclaimNeuralSupercharger();
     }
 }

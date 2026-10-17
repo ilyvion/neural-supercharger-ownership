@@ -1,6 +1,3 @@
-using HarmonyLib;
-using System.Reflection;
-
 namespace NeuralSuperchargerOwnership;
 
 #pragma warning disable CA1812
@@ -10,7 +7,8 @@ internal sealed class NeuralSuperchargerOwnershipMod : Mod
     internal static NeuralSuperchargerOwnershipMod instance;
 #pragma warning restore CS8618
 
-    public NeuralSuperchargerOwnershipMod(ModContentPack content) : base(content)
+    public NeuralSuperchargerOwnershipMod(ModContentPack content)
+        : base(content)
     {
         instance = this;
 
@@ -33,14 +31,13 @@ internal sealed class NeuralSuperchargerOwnershipMod : Mod
     //     return Content.Name;
     // }
 
-    public static void Message(string msg)
-    {
-        Log.Message("[Neural Supercharger Ownership] " + msg);
-    }
+    public static void Message(string msg) => Log.Message("[Neural Supercharger Ownership] " + msg);
 
     public static void Dev(string msg)
     {
-        if (Prefs.DevMode /*&& Settings._printDevMessages*/)
+        if (
+            Prefs.DevMode /*&& Settings._printDevMessages*/
+        )
         {
             Log.Message("[Neural Supercharger Ownership][DEV] " + msg);
         }
@@ -48,21 +45,17 @@ internal sealed class NeuralSuperchargerOwnershipMod : Mod
 
     public static void Dev(Func<string> produceMsg)
     {
-        if (Prefs.DevMode /*&& Settings._printDevMessages*/)
+        if (
+            Prefs.DevMode /*&& Settings._printDevMessages*/
+        )
         {
             Log.Message("[Neural Supercharger Ownership][DEV] " + produceMsg());
         }
     }
 
-    public static void Warning(string msg)
-    {
-        Log.Warning("[Neural Supercharger Ownership] " + msg);
-    }
+    public static void Warning(string msg) => Log.Warning("[Neural Supercharger Ownership] " + msg);
 
-    public static void Error(string msg)
-    {
-        Log.Error("[Neural Supercharger Ownership] " + msg);
-    }
+    public static void Error(string msg) => Log.Error("[Neural Supercharger Ownership] " + msg);
 
     public static void Exception(string msg, Exception? e = null)
     {
@@ -76,6 +69,4 @@ internal sealed class NeuralSuperchargerOwnershipMod : Mod
 #pragma warning restore CA1812
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-public sealed class HotSwappableAttribute : Attribute
-{
-}
+internal sealed class HotSwappableAttribute : Attribute { }
