@@ -165,7 +165,7 @@ internal sealed class CompAssignableToPawn_NeuralSupercharger : CompAssignableTo
                 && (!pawn.RaceProps.Animal || Prefs.AnimalNameMode.ShouldDisplayAnimalName(pawn))
             )
             {
-                if (charged && parent.Rotation.IsHorizontal)
+                if (LabelOffsetY(charged, parent.Rotation.IsHorizontal) is not { } offsetY)
                 {
                     GenMapUI.DrawThingLabel(
                         parent,
@@ -176,14 +176,7 @@ internal sealed class CompAssignableToPawn_NeuralSupercharger : CompAssignableTo
                 else
                 {
                     var screenPos = GenMapUI.LabelDrawPosFor(parent, -0.4f);
-                    if (parent.Rotation.IsHorizontal)
-                    {
-                        screenPos.y -= 15f;
-                    }
-                    else
-                    {
-                        screenPos.y += 30f;
-                    }
+                    screenPos.y += offsetY;
                     GenMapUI.DrawThingLabel(
                         screenPos,
                         pawn.LabelShort,
@@ -197,4 +190,11 @@ internal sealed class CompAssignableToPawn_NeuralSupercharger : CompAssignableTo
             base.DrawGUIOverlay();
         }
     }
+
+    // The owner label's vertical offset from the -0.4 label position, or null for the default
+    // label position.
+    internal static float? LabelOffsetY(bool charged, bool horizontal) =>
+        charged && horizontal ? null
+        : horizontal ? -15f
+        : 30f;
 }

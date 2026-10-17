@@ -9,12 +9,14 @@ internal sealed class SuperchargerScene : IDisposable
 {
     private readonly List<Building> superchargers = [];
     private readonly List<Pawn> pawns = [];
+    private readonly TimeSpeed timeSpeed;
 
     internal Map Map { get; }
 
     internal SuperchargerScene(Map map)
     {
         Map = map;
+        timeSpeed = Find.TickManager.CurTimeSpeed;
         Expect.IsEmpty(
             map.listerThings.ThingsOfDef(ThingDefOf.NeuralSupercharger),
             "An earlier test leaked a neural supercharger onto the map"
@@ -96,6 +98,21 @@ internal sealed class SuperchargerScene : IDisposable
         pawn.Kill(null);
     }
 
+    // Pauses the game and ticks it by hand until the condition holds or maxTicks have passed,
+    // letting a frame pass every 60 ticks.
+    internal static IEnumerator TickUntil(Func<bool> condition, int maxTicks)
+    {
+        Find.TickManager.CurTimeSpeed = TimeSpeed.Paused;
+        for (var ticks = 0; ticks < maxTicks && !condition(); ticks++)
+        {
+            Find.TickManager.DoSingleTick();
+            if (ticks % 60 == 59)
+            {
+                yield return null;
+            }
+        }
+    }
+
     // Ownership is recorded both on the pawn and on the supercharger, and both must agree.
     internal void ExpectConsistent(Pawn pawn, Building? building)
     {
@@ -147,5 +164,6 @@ internal sealed class SuperchargerScene : IDisposable
             }
         }
         ExpectNoColonistOwnsASupercharger("A colonist still owns a destroyed supercharger");
+        Find.TickManager.CurTimeSpeed = timeSpeed;
     }
 }
