@@ -1,4 +1,4 @@
-[![RimWorld 1.5](https://img.shields.io/badge/RimWorld-1.5-brightgreen.svg)](http://rimworldgame.com/) [![Build](https://github.com/ilyvion/neural-supercharger-ownership/actions/workflows/build.yml/badge.svg)](https://github.com/ilyvion/neural-supercharger-ownership/actions/workflows/build.yml)
+[![RimWorld 1.5](https://img.shields.io/badge/RimWorld-1.5-brightgreen.svg)](http://rimworldgame.com/) [![RimWorld 1.6](https://img.shields.io/badge/RimWorld-1.6-brightgreen.svg)](http://rimworldgame.com/) [![Build](https://github.com/ilyvion/neural-supercharger-ownership/actions/workflows/build.yml/badge.svg)](https://github.com/ilyvion/neural-supercharger-ownership/actions/workflows/build.yml)
 
 This is a simple mod that does a single thing — allows you to assign ownership to Neural Superchargers just like you would a bed.
 

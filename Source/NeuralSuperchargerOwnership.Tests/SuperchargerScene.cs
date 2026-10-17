@@ -81,6 +81,16 @@ internal sealed class SuperchargerScene : IDisposable
         return pawn;
     }
 
+    // Whatever the pawn carries is destroyed first, so dying drops nothing onto the map. The corpse
+    // is destroyed by Dispose.
+    internal static void Kill(Pawn pawn)
+    {
+        pawn.equipment?.DestroyAllEquipment();
+        pawn.inventory?.DestroyAll();
+        pawn.carryTracker?.DestroyCarriedThing();
+        pawn.Kill(null);
+    }
+
     // Ownership is recorded both on the pawn and on the supercharger, and both must agree.
     internal void ExpectConsistent(Pawn pawn, Building? building)
     {
@@ -118,6 +128,10 @@ internal sealed class SuperchargerScene : IDisposable
             if (!pawn.Destroyed)
             {
                 pawn.Destroy();
+            }
+            if (pawn.Corpse is { Destroyed: false } corpse)
+            {
+                corpse.Destroy();
             }
         }
         foreach (var supercharger in superchargers)

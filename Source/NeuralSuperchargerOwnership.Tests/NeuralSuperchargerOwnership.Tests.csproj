@@ -28,6 +28,7 @@
         <Publicize Include="Assembly-CSharp:RimWorld.CompRechargeable.ticksUntilCharged" />
         <Publicize Include="Assembly-CSharp:RimWorld.CompAssignableToPawn.uninstalledAssignedPawns" />
         <Publicize Include="Assembly-CSharp:RimWorld.CompAssignableToPawn.CanSetUninstallAssignedPawn" />
+        <Publicize Include="Assembly-CSharp:Verse.Messages.liveMessages" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\NeuralSuperchargerOwnership\NeuralSuperchargerOwnership.csproj">

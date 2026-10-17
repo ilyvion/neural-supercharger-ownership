@@ -107,41 +107,37 @@ internal sealed class CompAssignableToPawn_NeuralSupercharger : CompAssignableTo
     {
         base.PostDestroy(mode, previousMap);
 
-        var destroyed = mode == DestroyMode.KillFinalize;
-
-        if (mode != DestroyMode.Vanish)
+        if (assignedPawns.Count != 1)
         {
-            if (assignedPawns.Count == 1)
-            {
-                var assignedPawn = assignedPawns[0];
-                _ = assignedPawn.NeuralSuperchargerOwnership().UnclaimNeuralSupercharger();
+            return;
+        }
 
-                var key = "MessageBedLostAssignment";
-                if (destroyed)
-                {
-                    key = "MessageBedDestroyed";
-                }
-                Messages.Message(
-                    key.Translate(parent.def, assignedPawn),
-                    new LookTargets(parent, assignedPawn),
-                    MessageTypeDefOf.CautionInput,
-                    historical: false
-                );
-            }
-        }
-        else if (InstallBlueprintUtility.ExistingBlueprintFor(parent) == null)
+        // Every destroy mode removes the supercharger for good; minifying only despawns it.
+        var assignedPawn = assignedPawns[0];
+        _ = assignedPawn.NeuralSuperchargerOwnership().UnclaimNeuralSupercharger();
+
+        string key;
+        if (mode == DestroyMode.KillFinalize)
         {
-            if (assignedPawns.Count == 1)
-            {
-                var assignedPawn = assignedPawns[0];
-                Messages.Message(
-                    "MessageBedLostAssignment".Translate(parent.def, assignedPawn),
-                    new LookTargets(parent, assignedPawn),
-                    MessageTypeDefOf.CautionInput,
-                    historical: false
-                );
-            }
+            key = "MessageBedDestroyed";
         }
+        else if (
+            mode != DestroyMode.Vanish
+            || InstallBlueprintUtility.ExistingBlueprintFor(parent) == null
+        )
+        {
+            key = "MessageBedLostAssignment";
+        }
+        else
+        {
+            return;
+        }
+        Messages.Message(
+            key.Translate(parent.def, assignedPawn),
+            new LookTargets(parent, assignedPawn),
+            MessageTypeDefOf.CautionInput,
+            historical: false
+        );
     }
 
     public override void DrawGUIOverlay()
